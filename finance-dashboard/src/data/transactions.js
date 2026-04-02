@@ -1,39 +1,24 @@
-// src/data/transactions.js
-
 export const transactions = [
-  {
-    id: 1,
-    date: "2026-04-01",
-    amount: 50000,
-    category: "Salary",
-    type: "income"
-  },
-  {
-    id: 2,
-    date: "2026-04-02",
-    amount: 500,
-    category: "Food",
-    type: "expense"
-  },
-  {
-    id: 3,
-    date: "2026-04-03",
-    amount: 1200,
-    category: "Shopping",
-    type: "expense"
-  },
-  {
-    id: 4,
-    date: "2026-04-04",
-    amount: 2000,
-    category: "Freelance",
-    type: "income"
-  },
-  {
-    id: 5,
-    date: "2026-04-05",
-    amount: 800,
-    category: "Transport",
-    type: "expense"
-  }
+  { id: 1, date: "2026-04-01", description: "Grocery Shopping", category: "Shopping", type: "Expense", amount: 4500 },
+  { id: 2, date: "2026-03-28", description: "Apartment Rent", category: "Rent", type: "Expense", amount: 22000 },
+  { id: 3, date: "2026-03-27", description: "Coffee & Snacks", category: "Food", type: "Expense", amount: 850 },
+  { id: 4, date: "2026-03-25", description: "Freelance Project - UI", category: "Freelance", type: "Income", amount: 15000 },
+  { id: 5, date: "2026-03-20", description: "Zomato Dinner", category: "Food", type: "Expense", amount: 1200 },
+  { id: 6, date: "2026-03-15", description: "Monthly Salary", category: "Salary", type: "Income", amount: 85000 },
+  { id: 7, date: "2026-03-10", description: "Electricity Bill", category: "Utilities", type: "Expense", amount: 3200 },
+  { id: 8, date: "2026-03-05", description: "Gym Membership", category: "Healthcare", type: "Expense", amount: 2000 },
+  { id: 9, date: "2026-03-01", description: "New Monitor", category: "Shopping", type: "Expense", amount: 18000 },
+  { id: 10, date: "2026-02-28", description: "Client Consultation", category: "Freelance", type: "Income", amount: 5000 },
+  { id: 11, date: "2026-02-25", description: "Netflix Subscription", category: "Subscriptions", type: "Expense", amount: 499 },
+  { id: 12, date: "2026-02-20", description: "Petrol/Fuel", category: "Transport", type: "Expense", amount: 3000 },
+  { id: 13, date: "2026-02-15", description: "Stock Dividends", category: "Investment", type: "Income", amount: 1200 },
+  { id: 14, date: "2026-02-10", description: "Pharmacy", category: "Healthcare", type: "Expense", amount: 1500 },
+  { id: 15, date: "2026-02-05", description: "Udemy Course", category: "Education", type: "Expense", amount: 499 },
+  { id: 16, date: "2026-02-01", description: "Broadband Bill", category: "Utilities", type: "Expense", amount: 999 },
+  { id: 17, date: "2026-01-25", description: "Amazon Purchase", category: "Shopping", type: "Expense", amount: 2500 },
+  { id: 18, date: "2026-01-20", description: "Restaurant Visit", category: "Food", type: "Expense", amount: 3500 },
+  { id: 19, date: "2026-01-15", description: "Yearly Bonus", category: "Salary", type: "Income", amount: 25000 },
+  { id: 20, date: "2026-01-10", description: "Life Insurance", category: "Healthcare", type: "Expense", amount: 12000 },
+  { id: 21, date: "2026-01-05", description: "Mobile Recharge", category: "Utilities", type: "Expense", amount: 799 },
+  { id: 22, date: "2026-01-01", description: "Movie Night", category: "Entertainment", type: "Expense", amount: 1500 },
 ];
