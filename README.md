@@ -1,16 +1,100 @@
-# React + Vite
+# 💰 Finance Dashboard UI
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A clean and interactive finance dashboard built as part of a Frontend Developer Internship assignment. This project helps users track financial activity, analyze spending, and manage transactions efficiently.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🚀 Live Demo
 
-## React Compiler
+👉 https://finance-dashboard-i79c.vercel.app/
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## ✨ Features
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### 📊 Dashboard Overview
+
+* Total Balance, Income, and Expenses summary cards
+* Time-based visualization (Balance Trend Chart)
+* Category-based visualization (Spending Breakdown)
+
+### 📋 Transactions Management
+
+* View transactions with Date, Amount, Category, and Type
+* Search functionality for quick filtering
+* Clean and responsive table design
+
+### 🔐 Role-Based UI
+
+* Switch between **Admin** and **Viewer**
+* Admin can edit/delete transactions
+* Viewer has read-only access
+
+### 📈 Insights Section
+
+* Highest spending category
+* Monthly comparison insights
+* Helpful financial observations
+
+### ⚙️ State Management
+
+* Managed using React state (`useState`)
+* Handles transactions, filters, and user roles efficiently
+
+### 🎨 UI/UX
+
+* Modern dark theme design
+* Responsive across devices
+* Smooth and clean user experience
+
+---
+
+## 🛠️ Tech Stack
+
+* **Frontend:** React (Vite)
+* **Styling:** Tailwind CSS
+* **Charts:** Chart.js, react-chartjs-2
+* **Animations:** Framer Motion, GSAP
+* **Icons:** Lucide React
+
+---
+
+## 📦 Installation & Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/your-username/finance-dashboard.git
+
+# Navigate to project folder
+cd finance-dashboard
+
+# Install dependencies
+npm install
+
+# Run the development server
+npm run dev
+```
+
+---
+
+## 🧠 Approach
+
+* Designed a modular component structure for scalability
+* Implemented role-based UI logic without backend dependency
+* Used chart libraries for data visualization
+* Focused on clean UI, usability, and performance optimization
+
+---
+
+## 📌 Notes
+
+* This project uses mock data (no backend)
+* Built for evaluation purposes as part of an internship assignment
+
+---
+
+## 🙌 Author
+
+**Nallamolu Uday Shekar**
+
+---
