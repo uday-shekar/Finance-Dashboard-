@@ -17,7 +17,7 @@ const RoleSwitcher = ({ role, setRole }) => {
       {/* SWITCH */}
       <div className="relative flex items-center bg-slate-100 dark:bg-slate-900 rounded-xl p-1 w-full overflow-hidden">
 
-        {/* 🔥 SLIDER FIX (NO % BUG) */}
+        {/*  SLIDER FIX (NO % BUG) */}
         <motion.div
           className="absolute top-1 bottom-1 w-1/2 bg-white dark:bg-indigo-600 rounded-lg shadow-sm z-0"
           initial={false}
@@ -54,7 +54,7 @@ const RoleSwitcher = ({ role, setRole }) => {
         </button>
       </div>
 
-      {/* 🔥 STATUS (ONLY DESKTOP) */}
+      {/*  STATUS (ONLY DESKTOP) */}
       <div className="hidden sm:flex items-center gap-2 px-2 border-l border-slate-200 dark:border-slate-700">
         
         <div

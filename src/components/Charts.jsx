@@ -24,7 +24,7 @@ const pieData = [
 const COLORS = ['#6366f1', '#10b981', '#f43f5e', '#f59e0b'];
 
 /* =======================
-   🔥 BALANCE TREND CHART
+   BALANCE TREND CHART
 ======================= */
 export const BalanceTrend = ({ darkMode }) => {
 
@@ -60,7 +60,7 @@ export const BalanceTrend = ({ darkMode }) => {
             dy={8}
           />
 
-          {/* 🔥 FIXED DOMAIN BUG */}
+          {/*  FIXED DOMAIN BUG */}
           <YAxis
             hide
             domain={[0, 'auto']}
@@ -94,7 +94,7 @@ export const BalanceTrend = ({ darkMode }) => {
 
 
 /* =======================
-   🔥 SPENDING PIE CHART
+   SPENDING PIE CHART
 ======================= */
 export const SpendingPie = ({ darkMode }) => {
 
@@ -106,7 +106,7 @@ export const SpendingPie = ({ darkMode }) => {
           <Pie
             data={pieData}
             dataKey="value"
-            innerRadius={50}   // 🔥 responsive radius
+            innerRadius={50}   
             outerRadius={80}
             paddingAngle={5}
             stroke="none"
@@ -130,7 +130,7 @@ export const SpendingPie = ({ darkMode }) => {
             formatter={(value) => [`${value}%`, 'Share']}
           />
 
-          {/* 🔥 RESPONSIVE LEGEND */}
+          {/* RESPONSIVE LEGEND */}
           <Legend
             verticalAlign="bottom"
             iconType="circle"

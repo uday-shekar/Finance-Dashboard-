@@ -30,7 +30,7 @@ const Sidebar = ({ activeTab, setActiveTab, role }) => {
 
   return (
     <>
-      {/* 🔥 MOBILE TOP BAR */}
+      {/*  MOBILE TOP BAR */}
       {!isDesktop && (
         <div className="fixed top-0 left-0 right-0 h-14 flex items-center justify-between px-4 bg-white dark:bg-[#0f172a] border-b z-50">
           <h1 className="text-lg font-bold">
@@ -42,7 +42,7 @@ const Sidebar = ({ activeTab, setActiveTab, role }) => {
         </div>
       )}
 
-      {/* 🔥 OVERLAY */}
+      {/*  OVERLAY */}
       <AnimatePresence>
         {open && !isDesktop && (
           <motion.div
@@ -55,7 +55,7 @@ const Sidebar = ({ activeTab, setActiveTab, role }) => {
         )}
       </AnimatePresence>
 
-      {/* 🔥 SIDEBAR */}
+      {/*  SIDEBAR */}
       <AnimatePresence>
         {(open || isDesktop) && (
           <motion.aside
@@ -65,7 +65,7 @@ const Sidebar = ({ activeTab, setActiveTab, role }) => {
             className="fixed top-0 left-0 h-screen w-64 bg-white dark:bg-[#0f172a] border-r flex flex-col z-50 lg:static"
           >
 
-            {/* 🔥 BRAND HEADER */}
+            {/*  BRAND HEADER */}
             <div className="px-5 py-6 border-b">
               <div className="flex items-center gap-3">
                 
@@ -85,7 +85,7 @@ const Sidebar = ({ activeTab, setActiveTab, role }) => {
               </div>
             </div>
 
-            {/* 🔥 MENU */}
+            {/*  MENU */}
             <div className="flex-1 px-3 py-4">
               <nav className="space-y-2">
                 {menuItems.map((item) => {
@@ -114,7 +114,7 @@ const Sidebar = ({ activeTab, setActiveTab, role }) => {
               </nav>
             </div>
 
-            {/* 🔥 ROLE CARD */}
+            {/*  ROLE CARD */}
             <div className="p-4 m-4 rounded-2xl bg-slate-100 dark:bg-slate-900">
               <div className="flex items-center gap-3">
                 <div className={`p-2 rounded-lg ${

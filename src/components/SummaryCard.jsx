@@ -25,7 +25,7 @@ const SummaryCard = ({ title, amount, sub, border }) => {
         transition-all duration-300 relative overflow-hidden group`}
     >
 
-      {/* 🔥 Background Effect */}
+      {/*  Background Effect */}
       <div
         className={`absolute -right-6 -top-6 w-20 h-20 rounded-full opacity-5 group-hover:opacity-10 transition-opacity
         ${border.replace('border-', 'bg-')}`}

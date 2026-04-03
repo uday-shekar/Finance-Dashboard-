@@ -7,7 +7,7 @@ const Dashboard = lazy(() => import('./pages/Dashboard'));
 const TransactionsPage = lazy(() => import('./pages/Transactions'));
 const InsightsPage = lazy(() => import('./pages/Insights'));
 
-// 🔥 LOADER
+//  LOADER
 const PageLoader = () => (
   <div className="flex h-full w-full items-center justify-center">
     <div className="flex flex-col items-center gap-2">
@@ -23,7 +23,7 @@ function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [role, setRole] = useState('Admin');
 
-  // 🔥 DARK MODE
+  //  DARK MODE
   const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
@@ -50,7 +50,7 @@ function App() {
 
   const toggleTheme = () => setDarkMode(prev => !prev);
 
-  // 🔥 LOCK BODY SCROLL
+  //  LOCK BODY SCROLL
   useEffect(() => {
     document.body.style.overflow = 'hidden';
     return () => {
@@ -58,7 +58,7 @@ function App() {
     };
   }, []);
 
-  // 🔥 PAGE ANIMATION
+  //  PAGE ANIMATION
   const pageVariants = {
     initial: { opacity: 0, y: 6 },
     animate: { opacity: 1, y: 0 },
@@ -69,7 +69,7 @@ function App() {
   return (
     <div className="h-screen w-full flex bg-[#f8fafc] dark:bg-[#0f172a] text-slate-900 dark:text-slate-100">
 
-      {/* 🔥 SIDEBAR */}
+      {/*  SIDEBAR */}
       <Sidebar 
         activeTab={activeTab} 
         setActiveTab={setActiveTab} 
@@ -78,7 +78,7 @@ function App() {
         toggleTheme={toggleTheme}
       />
 
-      {/* 🔥 MAIN CONTENT */}
+      {/*  MAIN CONTENT */}
       <main
         className="
           flex-1 
