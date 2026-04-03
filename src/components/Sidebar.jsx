@@ -1,84 +1,145 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { LayoutDashboard, ArrowRightLeft, BarChart3, ShieldCheck, User } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  LayoutDashboard, ArrowRightLeft, BarChart3, 
+  ShieldCheck, User, Menu, X 
+} from 'lucide-react';
 
-const Sidebar = ({ activeTab, setActiveTab, role, darkMode }) => {
+const Sidebar = ({ activeTab, setActiveTab, role }) => {
+
+  const [open, setOpen] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const checkScreen = () => {
+      setIsDesktop(window.innerWidth >= 1024);
+    };
+
+    checkScreen();
+    window.addEventListener('resize', checkScreen);
+    return () => window.removeEventListener('resize', checkScreen);
+  }, []);
+
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard size={18} /> },
     { id: 'transactions', label: 'Transactions', icon: <ArrowRightLeft size={18} /> },
     { id: 'insights', label: 'Insights', icon: <BarChart3 size={18} /> },
   ];
 
+  const isAdmin = role === 'Admin';
+
   return (
-    <div className="w-64 h-screen bg-white dark:bg-[#0f172a] border-r border-slate-200 dark:border-slate-800 flex flex-col fixed left-0 top-0 transition-colors duration-300 z-50">
-      
-      {/* Logo Section */}
-      <div className="p-8 pb-10">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-indigo-600 rounded-xl flex items-center justify-center text-white font-black italic">
-            F
-          </div>
-          <h1 className="text-2xl font-bold text-slate-800 dark:text-white tracking-tight">
-            Fin<span className="text-indigo-600 dark:text-indigo-400">Flow</span>
+    <>
+      {/* 🔥 MOBILE TOP BAR */}
+      {!isDesktop && (
+        <div className="fixed top-0 left-0 right-0 h-14 flex items-center justify-between px-4 bg-white dark:bg-[#0f172a] border-b z-50">
+          <h1 className="text-lg font-bold">
+            Fin<span className="text-indigo-600">Flow</span>
           </h1>
+          <button onClick={() => setOpen(true)}>
+            <Menu />
+          </button>
         </div>
-        <p className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-[0.2em] mt-2 pl-1">
-          Smart Finance
-        </p>
-      </div>
+      )}
 
-      {/* Navigation Links */}
-      <nav className="flex-1 px-4 space-y-1 mt-4 overflow-y-auto">
-        {menuItems.map((item) => {
-          const isActive = activeTab === item.id;
-          
-          return (
-            <button
-              key={item.id}
-              onClick={() => setActiveTab(item.id)}
-              className={`w-full relative flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-semibold transition-all duration-300 group ${
-                isActive 
-                  ? 'text-indigo-600 dark:text-indigo-400' 
-                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
-              }`}
-            >
-              {/* Active Background Pill */}
-              {isActive && (
-                <motion.div 
-                  layoutId="activeNav"
-                  className="absolute inset-0 bg-indigo-50 dark:bg-indigo-900/20 rounded-xl border-r-4 border-indigo-600 dark:border-indigo-500"
-                  transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-                />
-              )}
+      {/* 🔥 OVERLAY */}
+      <AnimatePresence>
+        {open && !isDesktop && (
+          <motion.div
+            onClick={() => setOpen(false)}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/40 z-40"
+          />
+        )}
+      </AnimatePresence>
 
-              <span className={`relative z-10 transition-transform duration-300 ${isActive ? 'scale-110' : 'group-hover:scale-110'}`}>
-                {item.icon}
-              </span>
-              <span className="relative z-10 tracking-tight">
-                {item.label}
-              </span>
-            </button>
-          );
-        })}
-      </nav>
+      {/* 🔥 SIDEBAR */}
+      <AnimatePresence>
+        {(open || isDesktop) && (
+          <motion.aside
+            initial={{ x: '-100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '-100%' }}
+            className="fixed top-0 left-0 h-screen w-64 bg-white dark:bg-[#0f172a] border-r flex flex-col z-50 lg:static"
+          >
 
-      {/* Bottom Role Section */}
-      <div className="p-4 mx-4 mb-6 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 shadow-inner">
-        <div className="flex items-center gap-3">
-          <div className={`p-2 rounded-lg ${role === 'Admin' ? 'bg-emerald-100 text-emerald-600' : 'bg-amber-100 text-amber-600'}`}>
-            {role === 'Admin' ? <ShieldCheck size={16} /> : <User size={16} />}
-          </div>
-          <div className="flex flex-col">
-            <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">
-              Authenticated
-            </span>
-            <span className="text-sm font-bold text-slate-700 dark:text-slate-200">
-              {role} Mode
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
+            {/* 🔥 BRAND HEADER */}
+            <div className="px-5 py-6 border-b">
+              <div className="flex items-center gap-3">
+                
+                {/* LOGO */}
+                <div className="w-9 h-9 flex items-center justify-center rounded-xl bg-indigo-600 text-white font-bold">
+                  F
+                </div>
+
+                <div>
+                  <h1 className="text-lg font-bold text-slate-800 dark:text-white">
+                    Fin<span className="text-indigo-600">Flow</span>
+                  </h1>
+                  <p className="text-[10px] tracking-[0.2em] text-slate-400">
+                    SMART FINANCE
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* 🔥 MENU */}
+            <div className="flex-1 px-3 py-4">
+              <nav className="space-y-2">
+                {menuItems.map((item) => {
+                  const isActive = activeTab === item.id;
+
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => {
+                        setActiveTab(item.id);
+                        setOpen(false);
+                      }}
+                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
+                        isActive
+                          ? 'bg-indigo-100 text-indigo-600'
+                          : 'text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800'
+                      }`}
+                    >
+                      <span className={`${isActive ? 'text-indigo-600' : ''}`}>
+                        {item.icon}
+                      </span>
+                      <span>{item.label}</span>
+                    </button>
+                  );
+                })}
+              </nav>
+            </div>
+
+            {/* 🔥 ROLE CARD */}
+            <div className="p-4 m-4 rounded-2xl bg-slate-100 dark:bg-slate-900">
+              <div className="flex items-center gap-3">
+                <div className={`p-2 rounded-lg ${
+                  isAdmin
+                    ? 'bg-green-100 text-green-600'
+                    : 'bg-yellow-100 text-yellow-600'
+                }`}>
+                  {isAdmin ? <ShieldCheck size={16} /> : <User size={16} />}
+                </div>
+
+                <div>
+                  <p className="text-[10px] tracking-wider text-slate-400 uppercase">
+                    AUTHENTICATED
+                  </p>
+                  <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+                    {isAdmin ? 'Admin Mode' : 'User Mode'}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+          </motion.aside>
+        )}
+      </AnimatePresence>
+    </>
   );
 };
 
