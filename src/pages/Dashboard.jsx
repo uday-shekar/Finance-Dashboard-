@@ -37,7 +37,7 @@ const Dashboard = ({ role, setRole, darkMode, toggleTheme }) => {
               Dashboard Overview
             </h2>
             <p className="text-sm text-slate-500 dark:text-slate-400">
-              Welcome back, mava! Checking your <span className="text-indigo-600 dark:text-indigo-400 font-semibold">{role}</span> insights.
+              Welcome back, Checking your <span className="text-indigo-600 dark:text-indigo-400 font-semibold">{role}</span> insights.
             </p>
           </div>
         </div>
