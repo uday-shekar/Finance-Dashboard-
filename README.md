@@ -63,7 +63,7 @@ A clean and interactive finance dashboard built as part of a Frontend Developer 
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/finance-dashboard.git
+git clone https://github.com/uday-shekar/Finance-Dashboard-.git
 
 # Navigate to project folder
 cd finance-dashboard
