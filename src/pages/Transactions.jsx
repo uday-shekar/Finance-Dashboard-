@@ -1,10 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { transactions as initialData } from '../data/transactions';
-import { 
-  Search, Plus, Edit2, Trash2, 
-  Shield, X 
-} from 'lucide-react';
+import { Plus, Edit2, Trash2, X, Search, Filter } from 'lucide-react';
 
 const Transactions = ({ role }) => {
   const [data, setData] = useState(initialData);
@@ -15,175 +12,275 @@ const Transactions = ({ role }) => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState(null);
-  const [formData, setFormData] = useState({ description: '', amount: '', category: 'Food', type: 'Expense', date: new Date().toISOString().split('T')[0] });
+  const [formData, setFormData] = useState({
+    description: '',
+    amount: '',
+    category: 'Food',
+    type: 'Expense',
+    date: new Date().toISOString().split('T')[0]
+  });
 
   const categories = ["Education","Entertainment","Food","Freelance","Healthcare","Investment","Rent","Salary","Shopping","Subscriptions","Transport","Utilities"];
   const isAdmin = role?.toLowerCase() === 'admin';
 
-  const handleOpenModal = (transaction = null) => {
-    if (transaction) {
-      setEditingTransaction(transaction);
-      setFormData(transaction);
+  // ---------- HANDLERS ----------
+  const handleOpenModal = (t = null) => {
+    if (t) {
+      setEditingTransaction(t);
+      setFormData(t);
     } else {
       setEditingTransaction(null);
-      setFormData({ description: '', amount: '', category: 'Food', type: 'Expense', date: new Date().toISOString().split('T')[0] });
+      setFormData({
+        description: '',
+        amount: '',
+        category: 'Food',
+        type: 'Expense',
+        date: new Date().toISOString().split('T')[0]
+      });
     }
     setIsModalOpen(true);
   };
 
   const handleSave = (e) => {
     e.preventDefault();
+    const updatedAmount = Number(formData.amount);
+    
     if (editingTransaction) {
-      setData(data.map(t => t.id === editingTransaction.id ? { ...formData, amount: Number(formData.amount) } : t));
+      setData(data.map(t => t.id === editingTransaction.id ? { ...formData, amount: updatedAmount } : t));
     } else {
-      setData([{ ...formData, id: Date.now(), amount: Number(formData.amount) }, ...data]);
+      setData([{ ...formData, id: Date.now(), amount: updatedAmount }, ...data]);
     }
     setIsModalOpen(false);
   };
 
   const handleDelete = (id) => {
-    if (window.confirm("Delete transaction?")) {
+    if (window.confirm("Delete this transaction?")) {
       setData(data.filter(t => t.id !== id));
     }
   };
 
+  // ---------- FILTER LOGIC ----------
   const filteredData = useMemo(() => {
     let result = [...data];
     if (searchTerm) result = result.filter(t => t.description.toLowerCase().includes(searchTerm.toLowerCase()));
     if (filterType !== 'All Types') result = result.filter(t => t.type === filterType);
     if (filterCategory !== 'All Categories') result = result.filter(t => t.category === filterCategory);
-    result.sort((a,b)=> sortOrder==='Newest First'? new Date(b.date)-new Date(a.date): new Date(a.date)-new Date(b.date));
+
+    result.sort((a, b) => sortOrder === 'Newest First' ? new Date(b.date) - new Date(a.date) : new Date(a.date) - new Date(b.date));
     return result;
   }, [data, searchTerm, filterType, filterCategory, sortOrder]);
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-      className="p-4 sm:p-6 md:p-10 space-y-6 md:space-y-8 bg-[#f8fafc] dark:bg-[#0f172a] min-h-screen overflow-x-hidden">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="p-4 md:p-10 space-y-6 bg-[#f8fafc] dark:bg-[#0f172a] min-h-screen text-slate-800 dark:text-slate-100"
+    >
+      {/* HEADER */}
+      <div className="flex justify-between items-center">
+        <div>
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Transactions</h2>
+          <p className="text-sm text-slate-500">{filteredData.length} records found</p>
+        </div>
 
-      <div className="max-w-7xl mx-auto space-y-6 md:space-y-8">
+        {isAdmin && (
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => handleOpenModal()}
+            className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl flex items-center gap-2 shadow-lg shadow-indigo-500/20 transition-colors"
+          >
+            <Plus size={20} /> <span className="hidden sm:inline">Add Transaction</span>
+          </motion.button>
+        )}
+      </div>
 
-        {/* HEADER */}
-        <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
-          <div>
-            <h2 className="text-2xl sm:text-3xl font-bold dark:text-white">Transactions</h2>
-            <div className="mt-2 flex items-center gap-2 px-3 py-1 bg-white dark:bg-slate-800 rounded-full border w-fit">
-              <Shield size={12} className={isAdmin ? "text-green-500":"text-yellow-500"} />
-              <span className="text-[10px] font-bold">{role} Mode</span>
+      {/* FILTERS GRID */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+          <input
+            placeholder="Search descriptions..."
+            className="w-full pl-10 pr-4 py-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:ring-2 focus:ring-indigo-500 outline-none transition"
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+
+        <select
+          onChange={(e) => setFilterType(e.target.value)}
+          className="p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:ring-2 focus:ring-indigo-500 outline-none cursor-pointer"
+        >
+          <option>All Types</option>
+          <option>Income</option>
+          <option>Expense</option>
+        </select>
+
+        <select
+          onChange={(e) => setFilterCategory(e.target.value)}
+          className="p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:ring-2 focus:ring-indigo-500 outline-none cursor-pointer"
+        >
+          <option>All Categories</option>
+          {categories.map(c => <option key={c} value={c}>{c}</option>)}
+        </select>
+
+        <select
+          onChange={(e) => setSortOrder(e.target.value)}
+          className="p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:ring-2 focus:ring-indigo-500 outline-none cursor-pointer"
+        >
+          <option>Newest First</option>
+          <option>Oldest First</option>
+        </select>
+      </div>
+
+      {/* TABLE SECTION */}
+      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
+        {/* Desktop View */}
+        <div className="hidden md:block">
+          <table className="w-full text-left">
+            <thead className="bg-slate-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider">
+              <tr>
+                <th className="p-5 font-semibold">Description</th>
+                <th className="p-5 font-semibold">Category</th>
+                <th className="p-5 font-semibold text-right">Amount</th>
+                {isAdmin && <th className="p-5 font-semibold text-right">Actions</th>}
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+              {filteredData.map((t) => (
+                <motion.tr key={t.id} layout className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+                  <td className="p-5">
+                    <p className="font-medium dark:text-white">{t.description}</p>
+                    <p className="text-xs text-slate-400">{t.date}</p>
+                  </td>
+                  <td className="p-5">
+                    <span className="px-3 py-1 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+                      {t.category}
+                    </span>
+                  </td>
+                  <td className={`p-5 text-right font-bold ${t.type === 'Expense' ? 'text-rose-500' : 'text-emerald-500'}`}>
+                    {t.type === 'Expense' ? '-' : '+'} ₹{t.amount.toLocaleString()}
+                  </td>
+                  {isAdmin && (
+                    <td className="p-5 text-right">
+                      <div className="flex justify-end gap-3 text-slate-400">
+                        <button onClick={() => handleOpenModal(t)} className="hover:text-indigo-500 transition-colors"><Edit2 size={18} /></button>
+                        <button onClick={() => handleDelete(t.id)} className="hover:text-rose-500 transition-colors"><Trash2 size={18} /></button>
+                      </div>
+                    </td>
+                  )}
+                </motion.tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Mobile View */}
+        <div className="md:hidden divide-y divide-slate-100 dark:divide-slate-800">
+          {filteredData.map(t => (
+            <div key={t.id} className="p-5 space-y-3">
+              <div className="flex justify-between items-start">
+                <div>
+                  <p className="font-bold dark:text-white">{t.description}</p>
+                  <p className="text-xs text-slate-400">{t.date} • {t.category}</p>
+                </div>
+                <p className={`font-bold ${t.type === 'Expense' ? 'text-rose-500' : 'text-emerald-500'}`}>
+                  ₹{t.amount}
+                </p>
+              </div>
+              {isAdmin && (
+                <div className="flex gap-4 pt-2">
+                  <button onClick={() => handleOpenModal(t)} className="text-xs font-bold text-indigo-500 uppercase">Edit</button>
+                  <button onClick={() => handleDelete(t.id)} className="text-xs font-bold text-rose-500 uppercase">Delete</button>
+                </div>
+              )}
             </div>
-          </div>
-
-          {isAdmin && (
-            <button onClick={()=>handleOpenModal()}
-              className="w-full sm:w-auto bg-indigo-600 text-white px-5 py-2.5 rounded-xl flex items-center justify-center gap-2">
-              <Plus size={16}/> Add
-            </button>
-          )}
-        </div>
-
-        {/* FILTERS */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 bg-white dark:bg-[#1e293b] p-4 rounded-2xl">
-          
-          <div className="relative">
-            <Search className="absolute left-3 top-3 text-slate-400" size={16}/>
-            <input placeholder="Search..."
-              className="w-full pl-9 pr-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-900 text-sm outline-none"
-              onChange={(e)=>setSearchTerm(e.target.value)}
-            />
-          </div>
-
-          <select onChange={(e)=>setFilterType(e.target.value)} className="p-2 rounded-xl bg-slate-100 dark:bg-slate-900 text-sm">
-            <option>All Types</option><option>Income</option><option>Expense</option>
-          </select>
-
-          <select onChange={(e)=>setFilterCategory(e.target.value)} className="p-2 rounded-xl bg-slate-100 dark:bg-slate-900 text-sm">
-            <option>All Categories</option>{categories.map(c=><option key={c}>{c}</option>)}
-          </select>
-
-          <select onChange={(e)=>setSortOrder(e.target.value)} className="p-2 rounded-xl bg-slate-100 dark:bg-slate-900 text-sm">
-            <option>Newest First</option><option>Oldest First</option>
-          </select>
-        </div>
-
-        {/* TABLE */}
-        <div className="bg-white dark:bg-[#111827] rounded-2xl overflow-hidden">
-
-          {/* 🔥 scroll fix */}
-          <div className="overflow-x-auto">
-            <table className="min-w-[600px] w-full text-sm">
-
-              <thead className="bg-slate-100 dark:bg-slate-900 text-xs uppercase">
-                <tr>
-                  <th className="p-4">Desc</th>
-                  <th className="p-4">Category</th>
-                  <th className="p-4">Amount</th>
-                  {isAdmin && <th className="p-4 text-right">Actions</th>}
-                </tr>
-              </thead>
-
-              <tbody>
-                {filteredData.map(t => (
-                  <tr key={t.id} className="border-b hover:bg-slate-50 dark:hover:bg-slate-800">
-                    <td className="p-4">
-                      <div className="font-bold">{t.description}</div>
-                      <div className="text-xs text-gray-400">{t.date}</div>
-                    </td>
-
-                    <td className="p-4">{t.category}</td>
-
-                    <td className={`p-4 font-bold ${t.type==='Expense'?'text-red-500':'text-green-500'}`}>
-                      {t.type==='Expense'?'-':'+'}₹{t.amount}
-                    </td>
-
-                    {isAdmin && (
-                      <td className="p-4 text-right space-x-2">
-                        <button onClick={()=>handleOpenModal(t)}><Edit2 size={14}/></button>
-                        <button onClick={()=>handleDelete(t.id)}><Trash2 size={14}/></button>
-                      </td>
-                    )}
-                  </tr>
-                ))}
-              </tbody>
-
-            </table>
-          </div>
+          ))}
         </div>
       </div>
 
       {/* MODAL */}
       <AnimatePresence>
         {isModalOpen && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black/50 p-4">
-            <motion.div initial={{scale:0.9}} animate={{scale:1}}
-              className="w-full max-w-md bg-white dark:bg-[#1e293b] p-6 rounded-2xl">
-
-              <div className="flex justify-between mb-4">
-                <h3 className="font-bold">{editingTransaction?"Edit":"Add"} Transaction</h3>
-                <button onClick={()=>setIsModalOpen(false)}><X/></button>
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsModalOpen(false)}
+              className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+            />
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              className="relative bg-white dark:bg-slate-900 w-full max-w-md p-8 rounded-3xl shadow-2xl shadow-black/20"
+            >
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-xl font-bold">{editingTransaction ? 'Edit' : 'New'} Transaction</h3>
+                <button onClick={() => setIsModalOpen(false)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">
+                  <X size={20} />
+                </button>
               </div>
 
-              <form onSubmit={handleSave} className="space-y-3">
-                <input required placeholder="Description"
-                  className="w-full p-3 rounded-xl bg-slate-100 dark:bg-slate-900"
-                  value={formData.description}
-                  onChange={(e)=>setFormData({...formData,description:e.target.value})}
-                />
+              <form onSubmit={handleSave} className="space-y-4">
+                <div className="space-y-1">
+                  <label className="text-xs font-bold uppercase tracking-wider text-slate-400">Description</label>
+                  <input
+                    required
+                    value={formData.description}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    className="w-full p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-indigo-500 outline-none"
+                  />
+                </div>
 
-                <input required type="number" placeholder="Amount"
-                  className="w-full p-3 rounded-xl bg-slate-100 dark:bg-slate-900"
-                  value={formData.amount}
-                  onChange={(e)=>setFormData({...formData,amount:e.target.value})}
-                />
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold uppercase tracking-wider text-slate-400">Amount</label>
+                    <input
+                      required
+                      type="number"
+                      value={formData.amount}
+                      onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
+                      className="w-full p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-indigo-500 outline-none"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold uppercase tracking-wider text-slate-400">Type</label>
+                    <select
+                      value={formData.type}
+                      onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+                      className="w-full p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-indigo-500 outline-none"
+                    >
+                      <option>Expense</option>
+                      <option>Income</option>
+                    </select>
+                  </div>
+                </div>
 
-                <button className="w-full bg-indigo-600 text-white py-3 rounded-xl">
-                  Save
-                </button>
+                <div className="space-y-1">
+                  <label className="text-xs font-bold uppercase tracking-wider text-slate-400">Category</label>
+                  <select
+                    value={formData.category}
+                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                    className="w-full p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-indigo-500 outline-none"
+                  >
+                    {categories.map(c => <option key={c} value={c}>{c}</option>)}
+                  </select>
+                </div>
+
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  type="submit"
+                  className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold shadow-lg shadow-indigo-500/30 mt-4 hover:bg-indigo-700 transition-colors"
+                >
+                  {editingTransaction ? 'Update' : 'Save'} Transaction
+                </motion.button>
               </form>
-
             </motion.div>
           </div>
         )}
       </AnimatePresence>
-
     </motion.div>
   );
 };
